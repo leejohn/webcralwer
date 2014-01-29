@@ -90,7 +90,9 @@ public class UrlSenders {
 									destMachine[1]);
 
 						}
+						
 						urlSender.send(urls);
+						logger.info("Send to remote machine");
 					} catch (NumberFormatException | RemoteException
 							| NotBoundException e) {
 						logger.error("Get Remote machine {} failed {}", node, e);
@@ -128,6 +130,7 @@ public class UrlSenders {
 	private String selfPort;
 	private String name;
 	private String self;
+	private String selfHostPort;
 
 	public UrlSenders(ExecutorService executorService, HashRingFromZK hashRing,
 			BlockingQueue<String> linkQueue, String specialSelf, String selfHost, String selfPort, String name) {
@@ -139,6 +142,7 @@ public class UrlSenders {
 		this.selfPort = selfPort;
 		this.self = specialSelf;
 		this.name = name;
+		this.selfHostPort = this.selfHost + ":" + this.selfPort;
 	}
 
 	public void send(final Collection<String> urls) {
@@ -167,7 +171,7 @@ public class UrlSenders {
 			
 			String node = hashRing.get(key);
 
-			if (node.equalsIgnoreCase(this.self) || node.equalsIgnoreCase(selfHost)) {
+			if (node.equalsIgnoreCase(this.self) || node.equalsIgnoreCase(selfHostPort)) {
 				this.linkQueue.addAll(urls);
 			} else {
 				executorService.submit(new SendTask(key, name, entry.getValue()));
