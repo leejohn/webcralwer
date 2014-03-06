@@ -92,7 +92,7 @@ public class UrlSenders {
 						}
 						
 						urlSender.send(urls);
-						logger.info("Send to remote machine");
+						logger.info("Send {} urls to remote machine", urls.size());
 					} catch (NumberFormatException | RemoteException
 							| NotBoundException e) {
 						logger.error("Get Remote machine {} failed {}", node, e);

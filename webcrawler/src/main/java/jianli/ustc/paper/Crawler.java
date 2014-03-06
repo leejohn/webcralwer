@@ -1,5 +1,6 @@
 package jianli.ustc.paper;
 
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -12,15 +13,20 @@ import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.PatternLayout;
 import org.apache.log4j.Priority;
 import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.zookeeper.AsyncCallback.VoidCallback;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs.Ids;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.BloomFilter;
@@ -33,9 +39,11 @@ import com.ning.http.client.Response;
 
 public class Crawler {
 	public static void main(String[] args) throws InterruptedException, RemoteException, SocketException, KeeperException {
-		ConsoleAppender appender = new ConsoleAppender(new SimpleLayout());
+		ConsoleAppender appender = new ConsoleAppender(new PatternLayout("[%p] %c{1} %d{HH:mm:ss} %m%n"));
 		appender.setThreshold(Priority.INFO);
 		BasicConfigurator.configure(appender);
+		
+		final Logger logger = LoggerFactory.getLogger("Main");
 		
     	String ipAddress = getNetWorkInterface();
     	if (ipAddress == null) {
@@ -59,8 +67,9 @@ public class Crawler {
     	LinkedBlockingQueue<Response> pageQueue = new LinkedBlockingQueue<Response>();
     	final ExecutorService executorService = Executors.newCachedThreadPool();
 
-    	linkQueue.put("http://www.baidu.com");
+    	linkQueue.put("http://www.hao123.com");
     	
+    	System.setProperty("java.rmi.server.hostname", ipAddress);
 		System.setProperty("java.rmi.server.useCodebaseOnly", "false");
 		System.setProperty("java.security.policy", "file:///home/jianli/git/ustcpaper/webcrawler/src/main/java/all.policy");
 
@@ -97,7 +106,7 @@ public class Crawler {
 					hashRing.getZk().create(nodeName, nodeName.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 				} catch (KeeperException | InterruptedException e) {
 					
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 				
 			}
@@ -107,16 +116,42 @@ public class Crawler {
     	
         Builder builder = new AsyncHttpClientConfig.Builder();
         builder.setMaximumNumberOfRedirects(20).setFollowRedirects(true);
-        builder.setMaximumConnectionsTotal(1024);
+        builder.setMaximumConnectionsTotal(4000);
         builder.setRequestTimeoutInMs(10000);
         builder.setMaxConnectionLifeTimeInMs(20000);
         builder.setUserAgent("Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)");
         builder.setMaximumConnectionsPerHost(100);
-        builder.setMaxRequestRetry(0);
+        builder.setMaxRequestRetry(3);
     	final AsyncHttpClient asyncHttpClient = new AsyncHttpClient(builder.build());
+    	final Downloader downloader = new Downloader(bloomFilter, asyncHttpClient, linkQueue, pageQueue);
+    	final LinkExtractor linkExtracator = new LinkExtractor(urlSenders, hashRing, bloomFilter, linkQueue, pageQueue);
+    	executorService.execute(downloader);
+    	executorService.execute(linkExtracator);
     	
-    	executorService.execute(new Downloader(bloomFilter, asyncHttpClient, linkQueue, pageQueue));
-    	executorService.execute(new LinkExtractor(urlSenders, hashRing, bloomFilter, linkQueue, pageQueue));
+    	Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				logger.info("Attempting to close all services and httpclient...");
+				try {
+					downloader.close();
+					logger.info("Downloader closed");
+					linkExtracator.close();
+					logger.info("LinkExtractor closed");
+					asyncHttpClient.close();
+					logger.info("HttpClient closed");
+					hashRing.close();
+					logger.info("Zookeeper closed");
+					executorService.shutdown();
+					logger.info("ThreadPool closed");
+					executorService.awaitTermination(1, TimeUnit.MINUTES);
+				} catch (IOException | InterruptedException e) {
+					logger.error(e.getMessage());
+				}
+				
+			}
+		}));
 	}
 	
 	public static String getNetWorkInterface() throws SocketException {

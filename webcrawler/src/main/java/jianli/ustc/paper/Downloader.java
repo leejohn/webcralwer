@@ -1,6 +1,11 @@
 package jianli.ustc.paper;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.hash.BloomFilter;
 import com.ning.http.client.AsyncCompletionHandler;
@@ -8,7 +13,7 @@ import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 
 class MyAsyncCompleteHandler extends AsyncCompletionHandler<Response> {
-
+	private static Logger logger = LoggerFactory.getLogger(MyAsyncCompleteHandler.class);
 	protected AsyncHttpClient client;
 	protected LinkedBlockingQueue<Response> pageQueue;
 	protected LinkedBlockingQueue<String> linkQueue;
@@ -35,7 +40,7 @@ class MyAsyncCompleteHandler extends AsyncCompletionHandler<Response> {
 		if (!this.bloomFilter.mightContain(this.uri)) {
 			try {
 				this.linkQueue.put(this.uri);
-				System.err.println("Reput " + this.uri);
+				logger.error("Reput {}", this.uri);
 			} catch (InterruptedException e) {
 
 			}
@@ -49,9 +54,9 @@ class MyAsyncCompleteHandler extends AsyncCompletionHandler<Response> {
 	@Override
 	public Response onCompleted(Response response) throws Exception {
 		String uri = response.getUri().toString();
-		System.out.println(uri);
+		logger.info("Download {}", uri);
 		if (this.bloomFilter.mightContain(uri)) {
-			System.err.println("Download duplicated uri: " + uri);
+			logger.warn("Download duplicated uri: {}", uri);
 			return response;
 		}
 		this.bloomFilter.put(uri);
@@ -63,8 +68,8 @@ class MyAsyncCompleteHandler extends AsyncCompletionHandler<Response> {
 
 }
 
-public class Downloader implements Runnable {
-
+public class Downloader implements Runnable, Closeable {
+	private static Logger logger = LoggerFactory.getLogger(Downloader.class);
 	public boolean running = true;
 	private final LinkedBlockingQueue<String> linkQueue;
 	private final LinkedBlockingQueue<Response> pageQueue;
@@ -93,11 +98,17 @@ public class Downloader implements Runnable {
 				this.client.prepareGet(link).execute(handler);
 
 			} catch (Exception e) {
-				System.err.println(e);
+				//logger.error(e.getMessage());
 			}
 
 		}
 
+	}
+
+	@Override
+	public void close() throws IOException {
+		this.running = false;
+		
 	}
 
 }
