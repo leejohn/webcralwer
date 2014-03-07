@@ -75,29 +75,42 @@ public class UrlSenders {
 
 				String node = iter.next();
 
-				if ( node.equalsIgnoreCase(UrlSenders.this.self) || node.equalsIgnoreCase(UrlSenders.this.selfHost)) {
+				if ( node.equalsIgnoreCase(UrlSenders.this.self) || node.equalsIgnoreCase(UrlSenders.this.selfHostPort)) {
 					logger.info("Put into myself's linkqueue");
 					UrlSenders.this.linkQueue.addAll(urls);
 					break;
 				} else {
-					try {
-						UrlSender urlSender = UrlSenders.this.urlSenders
-								.get(node);
-
-						if (urlSender == null) {
-							String[] destMachine = node.split(":");
-							urlSender = createUrlSender(destMachine[0],
-									destMachine[1]);
-
+					boolean sended = false;
+					for (int i = 0; i < 2; i++) {
+						try {
+							UrlSender urlSender = UrlSenders.this.urlSenders
+									.get(node);
+	
+							if (urlSender == null) {
+								String[] destMachine = node.split(":");
+								urlSender = createUrlSender(destMachine[0],
+										destMachine[1]);
+	
+							}
+							
+							urlSender.send(urls);
+							logger.info("Send {} urls to remote machine", urls.size());
+							sended = true;
+							break;
+						} catch (RemoteException
+								| NotBoundException e) {
+							logger.error("Get Remote machine {} failed {}", node, e);
+							urlSenders.remove(node);
+							logger.info("Remove remote cache from UrlSenders map");
+							logger.info("Try next node");
+							continue;
+						} catch (NumberFormatException e) {
+							continue;
 						}
-						
-						urlSender.send(urls);
-						logger.info("Send {} urls to remote machine", urls.size());
-					} catch (NumberFormatException | RemoteException
-							| NotBoundException e) {
-						logger.error("Get Remote machine {} failed {}", node, e);
-						logger.info("Try next node");
-						continue;
+					}
+					
+					if (sended) {
+						break;
 					}
 				}
 			}
