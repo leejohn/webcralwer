@@ -44,7 +44,7 @@ public class Crawler {
 		BasicConfigurator.configure(appender);
 		
 		final Logger logger = LoggerFactory.getLogger("Main");
-		
+		final long startTime = System.currentTimeMillis();
     	String ipAddress = getNetWorkInterface();
     	if (ipAddress == null) {
     		throw new RuntimeException("Couldn't not find a valid ip address");
@@ -63,6 +63,9 @@ public class Crawler {
 			}
 		}, 500000);
     	
+		//Create a statistics instance for counting
+		final Statistics stats = new Statistics();
+		
     	LinkedBlockingQueue<String> linkQueue = new LinkedBlockingQueue<String>();
     	LinkedBlockingQueue<Response> pageQueue = new LinkedBlockingQueue<Response>();
     	final ExecutorService executorService = Executors.newCachedThreadPool();
@@ -81,8 +84,8 @@ public class Crawler {
     	UrlSender urlSender = new UrlSenderImpl(linkQueue);
     	UrlSender remoteUrlSender = (UrlSender) UnicastRemoteObject.exportObject(urlSender, 0);
     	
-    	int port = 1099;
-    	Registry registry = LocateRegistry.createRegistry(port);
+    	int registryPort = 1099;
+    	Registry registry = LocateRegistry.createRegistry(registryPort);
     	registry.rebind("crawler", remoteUrlSender);
     	/**
     	 * try connect to zookeeper with the local ip address, and create /spider-cluster if that doesn't exist
@@ -92,38 +95,27 @@ public class Crawler {
     	 */   	    	
     	
     	String path = "/spider-cluster";
-    	final HashRingFromZK hashRing = new HashRingFromZK(ipAddress, "localhost:2181", 3000, null, false, path);
-    	hashRing.Initialize();
-    	    	
-    	final String nodeName = String.format("/spider-cluster/%s:%s", ipAddress, port);
-
-    	// create child under cluster path
-    	hashRing.getZk().sync(path, new VoidCallback() {
-			
-			@Override
-			public void processResult(int rc, String path, Object ctx) {
-				try {
-					hashRing.getZk().create(nodeName, nodeName.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-				} catch (KeeperException | InterruptedException e) {
-					
-					logger.error(e.getMessage());
-				}
-				
-			}
-		}, null);
+    	String zookeeperPort = "2181";
     	
-    	UrlSenders urlSenders = new UrlSenders(executorService, hashRing, linkQueue, "self", ipAddress, String.valueOf(port), "crawler");
+    	String selfHostPort = String.format("%s:%s", ipAddress, registryPort);
+    	final HashRingFromZK hashRing = new HashRingFromZK(selfHostPort, 
+    			"localhost:" + zookeeperPort, 3000, null, false, path);
+    	
+    	final String nodeName = String.format("/spider-cluster/%s:%s", ipAddress, registryPort);
+    	hashRing.Initialize(nodeName);
+    	
+    	UrlSenders urlSenders = new UrlSenders(executorService, hashRing, linkQueue, "self", ipAddress , String.valueOf(registryPort), "crawler");
     	
         Builder builder = new AsyncHttpClientConfig.Builder();
         builder.setMaximumNumberOfRedirects(20).setFollowRedirects(true);
-        builder.setMaximumConnectionsTotal(4000);
+        builder.setMaximumConnectionsTotal(1000);
         builder.setRequestTimeoutInMs(10000);
         builder.setMaxConnectionLifeTimeInMs(20000);
         builder.setUserAgent("Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)");
         builder.setMaximumConnectionsPerHost(100);
         builder.setMaxRequestRetry(3);
     	final AsyncHttpClient asyncHttpClient = new AsyncHttpClient(builder.build());
-    	final Downloader downloader = new Downloader(bloomFilter, asyncHttpClient, linkQueue, pageQueue);
+    	final Downloader downloader = new Downloader(bloomFilter, asyncHttpClient, linkQueue, pageQueue, stats);
     	final LinkExtractor linkExtracator = new LinkExtractor(urlSenders, hashRing, bloomFilter, linkQueue, pageQueue);
     	executorService.execute(downloader);
     	executorService.execute(linkExtracator);
@@ -132,7 +124,7 @@ public class Crawler {
 			
 			@Override
 			public void run() {
-				
+				long shutDownTime = System.currentTimeMillis();
 				logger.info("Attempting to close all services and httpclient...");
 				try {
 					downloader.close();
@@ -145,6 +137,18 @@ public class Crawler {
 					logger.info("Zookeeper closed");
 					executorService.shutdown();
 					logger.info("ThreadPool closed");
+					
+					logger.info("------------------------------------------------------");
+					logger.info("Total initiatied request: {}", stats.sendRequest.get());
+					logger.info("Downloaded: {}", stats.downloadedPage.get());
+					logger.info("Downloaded bytes: {}", stats.downloadedBytes.get());
+					logger.info("Failed requests: {}", stats.failedRequest.get());
+					logger.info("Timeout requests: {}", stats.timeoutFailure.get());
+					logger.info("Connect refused: {}", stats.connectRefused.get());
+					logger.info("Other exception: {}", stats.otherException.get());
+					logger.info("Time span: {}s", (shutDownTime - startTime) / 1000.0);
+					logger.info("------------------------------------------------------");
+					
 					executorService.awaitTermination(1, TimeUnit.MINUTES);
 				} catch (IOException | InterruptedException e) {
 					logger.error(e.getMessage());

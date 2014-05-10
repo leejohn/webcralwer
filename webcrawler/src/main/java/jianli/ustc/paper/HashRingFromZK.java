@@ -110,7 +110,7 @@ public class HashRingFromZK implements Watcher {
 		}
 	}
 	
-	public void Initialize() throws InterruptedException {
+	public void Initialize(final String nodeName) throws InterruptedException {
 		logger.info("HashRingFromZK initializing........");
 		if (this.watcher == null) {
 			this.watcher = new Watcher() {
@@ -122,7 +122,7 @@ public class HashRingFromZK implements Watcher {
 						HashRingFromZK.this.hashRing.add("self");
 						
 						try {
-							HashRingFromZK.this.Initialize();
+							HashRingFromZK.this.Initialize(nodeName);
 						} catch (InterruptedException e) {
 							logger.error(e.toString());
 						}
@@ -130,6 +130,8 @@ public class HashRingFromZK implements Watcher {
 						try {
 							logger.info("Zookeeper connected, try to create " + clusterPath + " if not exists");
 							createSpiderClusterPathIfNotExists();
+							logger.info("try to create a child node under {} representing myself {}", clusterPath, nodeName);
+							zk.create(nodeName, nodeName.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 							logger.info("Zookeeper repopulate with nodes under {}", clusterPath);
 							repopulateHashRing(true);
 						} catch (KeeperException e) {
@@ -185,7 +187,7 @@ public class HashRingFromZK implements Watcher {
 		List<String> children = this.zk.getChildren(this.clusterPath, watch ? this : null);
 		
 		this.hashRing.addAll(children);
-		this.hashRing.add("self");
+		//this.hashRing.add("self");
 		
 		logger.info("HashRing repopulated: {}", this.hashRing.getNodes());
 		return children;

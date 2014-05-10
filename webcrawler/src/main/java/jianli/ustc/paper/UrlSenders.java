@@ -80,38 +80,32 @@ public class UrlSenders {
 					UrlSenders.this.linkQueue.addAll(urls);
 					break;
 				} else {
-					boolean sended = false;
-					for (int i = 0; i < 2; i++) {
-						try {
-							UrlSender urlSender = UrlSenders.this.urlSenders
-									.get(node);
-	
-							if (urlSender == null) {
-								String[] destMachine = node.split(":");
-								urlSender = createUrlSender(destMachine[0],
-										destMachine[1]);
-	
-							}
-							
-							urlSender.send(urls);
-							logger.info("Send {} urls to remote machine", urls.size());
-							sended = true;
-							break;
-						} catch (RemoteException
-								| NotBoundException e) {
-							logger.error("Get Remote machine {} failed {}", node, e);
-							urlSenders.remove(node);
-							logger.info("Remove remote cache from UrlSenders map");
-							logger.info("Try next node");
-							continue;
-						} catch (NumberFormatException e) {
-							continue;
-						}
-					}
 					
-					if (sended) {
+					try {
+						UrlSender urlSender = UrlSenders.this.urlSenders
+								.get(node);
+
+						if (urlSender == null) {
+							String[] destMachine = node.split(":");
+							urlSender = createUrlSender(destMachine[0],
+									destMachine[1]);
+
+						}
+						
+						urlSender.send(urls);
+						logger.info("Send {} urls to remote machine", urls.size());
 						break;
+					} catch (RemoteException
+							| NotBoundException e) {
+						logger.error("Get Remote machine {} failed {}", node, e);
+						urlSenders.remove(node);
+						logger.info("Remove remote cache from UrlSenders map");
+						logger.info("Try next node");
+						continue;
+					} catch (NumberFormatException e) {
+						continue;
 					}
+
 				}
 			}
 
@@ -120,6 +114,7 @@ public class UrlSenders {
 		private UrlSender createUrlSender(String remoteHost, String remotePort)
 				throws AccessException, NumberFormatException, RemoteException,
 				NotBoundException {
+			logger.info("Get remote machine {}:{}", remoteHost, remotePort);
 			UrlSender urlSender = (UrlSender) LocateRegistry.getRegistry(
 					remoteHost, Integer.valueOf(remotePort)).lookup(name);
 			urlSenders.put(remoteHost + ":" + remotePort, urlSender);

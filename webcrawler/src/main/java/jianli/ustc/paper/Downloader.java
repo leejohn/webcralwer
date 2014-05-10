@@ -2,7 +2,9 @@ package jianli.ustc.paper;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +21,17 @@ class MyAsyncCompleteHandler extends AsyncCompletionHandler<Response> {
 	protected LinkedBlockingQueue<String> linkQueue;
 	protected String uri;
 	protected BloomFilter<String> bloomFilter;
+	protected Statistics stats;
 
 	public MyAsyncCompleteHandler(BloomFilter<String> bloomFilter,
 			LinkedBlockingQueue<String> linkQueue,
-			LinkedBlockingQueue<Response> pageQueue) {
+			LinkedBlockingQueue<Response> pageQueue,
+			Statistics stats) {
 		super();
 		this.pageQueue = pageQueue;
 		this.linkQueue = linkQueue;
 		this.bloomFilter = bloomFilter;
+		this.stats = stats;
 	}
 
 	public void setUri(String uri) {
@@ -35,8 +40,8 @@ class MyAsyncCompleteHandler extends AsyncCompletionHandler<Response> {
 
 	@Override
 	public void onThrowable(Throwable t) {
-		System.err.println(t);
-
+		logger.error(t.getMessage());
+		this.stats.failedRequest.incrementAndGet();
 		if (!this.bloomFilter.mightContain(this.uri)) {
 			try {
 				this.linkQueue.put(this.uri);
@@ -45,10 +50,14 @@ class MyAsyncCompleteHandler extends AsyncCompletionHandler<Response> {
 
 			}
 		}
-		//
-		// if (t instanceof IOException || t instanceof TimeoutException) {
-		// System.err.println(t);
-		// }
+		
+		 if (t instanceof TimeoutException) {
+			 this.stats.timeoutFailure.incrementAndGet();
+		 } else if (t instanceof ConnectException) {
+			 this.stats.connectRefused.incrementAndGet();
+		 } else {
+			 this.stats.otherException.incrementAndGet();
+		 }
 	}
 
 	@Override
@@ -61,7 +70,8 @@ class MyAsyncCompleteHandler extends AsyncCompletionHandler<Response> {
 		}
 		this.bloomFilter.put(uri);
 		this.pageQueue.put(response);
-
+		this.stats.downloadedPage.incrementAndGet();
+		this.stats.downloadedBytes.addAndGet(response.getResponseBodyAsBytes().length);
 		return response;
 
 	}
@@ -75,14 +85,17 @@ public class Downloader implements Runnable, Closeable {
 	private final LinkedBlockingQueue<Response> pageQueue;
 	private AsyncHttpClient client;
 	private BloomFilter<String> bloomFilter;
+	private Statistics stats;
 
 	public Downloader(BloomFilter<String> bloomFilter, AsyncHttpClient client,
 			LinkedBlockingQueue<String> linkQueue,
-			LinkedBlockingQueue<Response> pageQueue) {
+			LinkedBlockingQueue<Response> pageQueue,
+			Statistics stats) {
 		this.client = client;
 		this.linkQueue = linkQueue;
 		this.pageQueue = pageQueue;
 		this.bloomFilter = bloomFilter;
+		this.stats = stats;
 	}
 
 	public void run() {
@@ -93,8 +106,11 @@ public class Downloader implements Runnable, Closeable {
 				String link = linkQueue.take();
 
 				MyAsyncCompleteHandler handler = new MyAsyncCompleteHandler(
-						this.bloomFilter, this.linkQueue, this.pageQueue);
+						this.bloomFilter, this.linkQueue, this.pageQueue, this.stats);
 				handler.setUri(link);
+				
+//				logger.info("Send {}", link);
+				this.stats.sendRequest.incrementAndGet();
 				this.client.prepareGet(link).execute(handler);
 
 			} catch (Exception e) {
