@@ -1,0 +1,100 @@
+jiangxi 100Mbps
+shanghai
+beijing 30Mbps
+wuhu 24Mbps
+guanzhou 20Mbps
+
+hao123.com 500 connection 60 seconds
+[INFO] Main 16:25:41 ------------------------------------------------------
+[INFO] Main 16:25:41 Total initiatied request: 3803271
+[INFO] Main 16:25:41 Downloaded: 2306
+[INFO] Main 16:25:41 Downloaded bytes: 183059980
+[INFO] Main 16:25:41 Download throughput: 22.878180264282427
+[INFO] Main 16:25:41 Failed requests: 126
+[INFO] Main 16:25:41 Timeout requests: 105
+[INFO] Main 16:25:41 Connect refused: 0
+[INFO] Main 16:25:41 Other exception: 21
+[INFO] Main 16:25:41 Time span: 60.844s
+[INFO] Main 16:25:41 ------------------------------------------------------
+
+hao123.com 1000 connection 60 seconds
+[INFO] Main 16:20:05 Total initiatied request: 3395694
+[INFO] Main 16:20:05 Downloaded: 4123
+[INFO] Main 16:20:05 Downloaded bytes: 362498344
+[INFO] Main 16:20:05 Download throughput: 44.68694849667277
+[INFO] Main 16:20:05 Failed requests: 226
+[INFO] Main 16:20:05 Timeout requests: 210
+[INFO] Main 16:20:05 Connect refused: 3
+[INFO] Main 16:20:05 Other exception: 13
+[INFO] Main 16:20:05 Time span: 61.763s
+[INFO] Main 16:20:05 ------------------------------------------------------
+
+hao123.com 1100 connections 60 seconds
+[INFO] Main 16:38:44 ------------------------------------------------------
+[INFO] Main 16:38:44 Total initiatied request: 3343859
+[INFO] Main 16:38:44 Downloaded: 2765
+[INFO] Main 16:38:44 Downloaded bytes: 328292180
+[INFO] Main 16:38:44 Download throughput: 39.285209997019095
+[INFO] Main 16:38:44 Failed requests: 263
+[INFO] Main 16:38:44 Timeout requests: 255
+[INFO] Main 16:38:44 Connect refused: 0
+[INFO] Main 16:38:44 Other exception: 8
+[INFO] Main 16:38:44 Time span: 63.739s
+[INFO] Main 16:38:44 ------------------------------------------------------
+
+
+hao123.com 1200 connections 60 seconds
+[INFO] Main 16:32:03 ------------------------------------------------------
+[INFO] Main 16:32:03 Total initiatied request: 2856524
+[INFO] Main 16:32:03 Downloaded: 3689
+[INFO] MyAsyncCompleteHandler 16:32:03 Download http://www.baidu.com/s?usm=2&tn=baidutop10&f=0&wd=聚划算&ie=utf-8&rsv_cq=淘宝充值平台&rsv_dl=0_right_recom_6727
+[INFO] Main 16:32:03 Downloaded bytes: 336449165
+[INFO] Main 16:32:03 Download throughput: 42.99991601578903
+[INFO] Main 16:32:03 Failed requests: 442
+[INFO] Main 16:32:03 Timeout requests: 387
+[INFO] Main 16:32:03 Connect refused: 26
+[INFO] Main 16:32:03 Other exception: 29
+[INFO] Main 16:32:03 Time span: 59.535s
+[INFO] Main 16:32:03 ------------------------------------------------------
+
+hao123.com 1500 connections 60 seconds
+[INFO] Main 16:28:32 ------------------------------------------------------
+[INFO] Main 16:28:32 Total initiatied request: 2955570
+[INFO] Main 16:28:32 Downloaded: 4054
+[INFO] Main 16:28:32 Downloaded bytes: 339143162
+[INFO] Main 16:28:32 Download throughput: 42.19946760733592
+[INFO] Main 16:28:32 Failed requests: 514
+[INFO] Main 16:28:32 Timeout requests: 436
+[INFO] Main 16:28:32 Connect refused: 56
+[INFO] Main 16:28:32 Other exception: 22
+[INFO] Main 16:28:32 Time span: 61.233s
+[INFO] Main 16:28:32 ------------------------------------------------------
+ 
+
+hao123.com 2000 connection 60 seconds
+[INFO] Main 16:22:46 Downloaded: 3957
+[INFO] Main 16:22:46 Downloaded bytes: 346981777
+[INFO] MyAsyncCompleteHandler 16:22:46 Download http://pic.people.com.cn/
+[INFO] Main 16:22:46 Download throughput: 43.342636677064526
+[INFO] Main 16:22:46 Failed requests: 789
+[INFO] Main 16:22:46 Timeout requests: 561
+[INFO] Main 16:22:46 Connect refused: 213
+[INFO] Main 16:22:46 Other exception: 15
+[INFO] Main 16:22:46 Time span: 60.91s
+[INFO] Main 16:22:46 ------------------------------------------------------
+
+qq.com 1500 connections 60 seconds
+[INFO] Main 16:43:36 ------------------------------------------------------
+[INFO] Main 16:43:36 Total initiatied request: 5296730
+[INFO] Main 16:43:36 Downloaded: 3589
+[INFO] Main 16:43:36 Downloaded bytes: 356770886
+[INFO] Main 16:43:36 Download throughput: 44.05928565643476
+[INFO] Main 16:43:36 Failed requests: 1759
+[INFO] Main 16:43:36 Timeout requests: 371
+[INFO] Main 16:43:36 Connect refused: 1379
+[INFO] Main 16:43:36 Other exception: 9
+[INFO] Main 16:43:36 Time span: 61.735s
+[INFO] Main 16:43:36 ------------------------------------------------------
+
+
+

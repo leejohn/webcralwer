@@ -48,6 +48,10 @@
     	<groupId>org.apache.directory.studio</groupId>
     	<artifactId>org.apache.logging.log4j</artifactId>
     </dependency>
+    <dependency>
+    	<groupId>args4j</groupId>
+    	<artifactId>args4j</artifactId>
+    </dependency>
   </dependencies>
   <dependencyManagement>
   	<dependencies>
@@ -110,6 +114,11 @@
   			<groupId>org.apache.directory.studio</groupId>
   			<artifactId>org.apache.logging.log4j</artifactId>
   			<version>1.2.17</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>args4j</groupId>
+  			<artifactId>args4j</artifactId>
+  			<version>2.0.16</version>
   		</dependency>
   	</dependencies>
   </dependencyManagement>

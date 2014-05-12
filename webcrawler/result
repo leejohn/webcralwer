@@ -1,0 +1,70 @@
+[INFO] Main 09:53:32 ------------------------------------------------------
+[INFO] Main 09:53:32 Total initiatied request: 2511449
+[INFO] Main 09:53:32 Downloaded: 3243
+[INFO] Main 09:53:32 Downloaded bytes: 283563718
+[INFO] Main 09:53:32 Failed requests: 281
+[INFO] Main 09:53:32 Timeout requests: 252
+[INFO] Main 09:53:32 Connect refused: 8
+[INFO] Main 09:53:32 Other exception: 21
+[INFO] Main 09:53:32 Time span: 54.836s
+[INFO] Main 09:53:32 -----------------------------------------------------
+
+[INFO] Main 10:16:23 ------------------------------------------------------
+[INFO] Main 10:16:23 Total initiatied request: 3688377
+[INFO] Main 10:16:23 Downloaded: 3291
+[INFO] Main 10:16:23 Downloaded bytes: 346193217
+[INFO] Main 10:16:23 Failed requests: 242
+[INFO] Main 10:16:23 Timeout requests: 216
+[INFO] Main 10:16:23 Connect refused: 9
+[INFO] Main 10:16:23 Other exception: 17
+[INFO] Main 10:16:23 Time span: 78.797s
+[INFO] Main 10:16:23 ------------------------------------------------------
+-
+
+[INFO] Main 10:22:58 ------------------------------------------------------
+[INFO] ClientCnxn 10:22:58 EventThread shut down
+[INFO] Main 10:22:58 Total initiatied request: 2207095
+[INFO] Main 10:22:58 Downloaded: 3495
+[INFO] Main 10:22:58 Downloaded bytes: 329788543
+[INFO] Main 10:22:58 Failed requests: 915
+[INFO] Main 10:22:58 Timeout requests: 434
+[INFO] Main 10:22:58 Connect refused: 470
+[INFO] Main 10:22:58 Other exception: 11
+[INFO] Main 10:22:58 Time span: 64.734s
+[INFO] Main 10:22:58 ------------------------------------------------------
+
+[INFO] Main 10:27:47 Total initiatied request: 2446218
+[INFO] Main 10:27:47 Downloaded: 3674
+[INFO] Main 10:27:47 Downloaded bytes: 310504924
+[INFO] Main 10:27:47 Failed requests: 909
+[INFO] Main 10:27:47 Timeout requests: 668
+[INFO] Main 10:27:47 Connect refused: 208
+[INFO] Main 10:27:47 Other exception: 33
+[INFO] Main 10:27:47 Time span: 63.504s
+[INFO] Main 10:27:47 ------------------------------------------------------
+
+3000 connections 10s timeout
+[INFO] Main 10:30:52 ------------------------------------------------------
+[INFO] Main 10:30:52 Total initiatied request: 2305743
+[INFO] Main 10:30:52 Downloaded: 3303
+[INFO] Main 10:30:52 Downloaded bytes: 263432284
+[INFO] Main 10:30:52 Failed requests: 2001
+[INFO] Main 10:30:52 Timeout requests: 958
+[INFO] Main 10:30:52 Connect refused: 1030
+[INFO] Main 10:30:52 Other exception: 13
+[INFO] Main 10:30:52 Time span: 61.557s
+[INFO] Main 10:30:52 ------------------------------------------------------
+
+1000 connection 10s timeout www.qq.com
+[INFO] Main 11:03:10 ------------------------------------------------------
+[INFO] Main 11:03:10 Total initiatied request: 4120664
+[INFO] Main 11:03:10 Downloaded: 4348
+[INFO] Main 11:03:10 Downloaded bytes: 444718930
+[INFO] Main 11:03:10 Failed requests: 449
+[INFO] Main 11:03:10 Timeout requests: 280
+[INFO] Main 11:03:10 Connect refused: 16
+[INFO] Main 11:03:10 Other exception: 153
+[INFO] Main 11:03:10 Time span: 64.526s
+[INFO] Main 11:03:10 ------------------------------------------------------
+
+

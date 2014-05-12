@@ -1,6 +1,8 @@
 package jianli.ustc.paper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -25,6 +27,8 @@ import org.apache.zookeeper.AsyncCallback.VoidCallback;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs.Ids;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +47,26 @@ public class Crawler {
 		appender.setThreshold(Priority.INFO);
 		BasicConfigurator.configure(appender);
 		
+		//process arguments
+		Arguments arguments = new Arguments(-1, 1000, 10);
+		CmdLineParser cmdLineParser = new CmdLineParser(arguments);
+		try {
+			cmdLineParser.parseArgument(args);
+		} catch (CmdLineException e1) {
+			e1.printStackTrace();
+		}
+		
 		final Logger logger = LoggerFactory.getLogger("Main");
+		
+		logger.info("-------------------Crawler parameters----------------");
+		logger.info("Total connections: {}", arguments.connections);
+		
+		if (arguments.timeInSecond > 0) {
+			logger.info("Crawler run for {}s", arguments.timeInSecond);
+		}
+		
+		logger.info("-----------------------------------------------------");
+		
 		final long startTime = System.currentTimeMillis();
     	String ipAddress = getNetWorkInterface();
     	if (ipAddress == null) {
@@ -69,8 +92,12 @@ public class Crawler {
     	LinkedBlockingQueue<String> linkQueue = new LinkedBlockingQueue<String>();
     	LinkedBlockingQueue<Response> pageQueue = new LinkedBlockingQueue<Response>();
     	final ExecutorService executorService = Executors.newCachedThreadPool();
-
-    	linkQueue.put("http://www.hao123.com");
+    
+    	if (arguments.seeds != null && arguments.seeds.length > 0) {
+    		for (String seed : arguments.seeds) {
+    			linkQueue.put(seed);
+    		}
+    	}
     	
     	System.setProperty("java.rmi.server.hostname", ipAddress);
 		System.setProperty("java.rmi.server.useCodebaseOnly", "false");
@@ -108,24 +135,23 @@ public class Crawler {
     	
         Builder builder = new AsyncHttpClientConfig.Builder();
         builder.setMaximumNumberOfRedirects(20).setFollowRedirects(true);
-        builder.setMaximumConnectionsTotal(1000);
-        builder.setRequestTimeoutInMs(10000);
+        builder.setMaximumConnectionsTotal(arguments.connections);
+        builder.setRequestTimeoutInMs(arguments.timeoutInSeconds * 1000);
         builder.setMaxConnectionLifeTimeInMs(20000);
         builder.setUserAgent("Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)");
-        builder.setMaximumConnectionsPerHost(100);
+        builder.setMaximumConnectionsPerHost(200);
         builder.setMaxRequestRetry(3);
     	final AsyncHttpClient asyncHttpClient = new AsyncHttpClient(builder.build());
     	final Downloader downloader = new Downloader(bloomFilter, asyncHttpClient, linkQueue, pageQueue, stats);
     	final LinkExtractor linkExtracator = new LinkExtractor(urlSenders, hashRing, bloomFilter, linkQueue, pageQueue);
-    	executorService.execute(downloader);
-    	executorService.execute(linkExtracator);
+
     	
-    	Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+    	Runnable shutdownHook = new Runnable() {
 			
 			@Override
 			public void run() {
 				long shutDownTime = System.currentTimeMillis();
-				logger.info("Attempting to close all services and httpclient...");
+				logger.info("Attempting to close all services and httpclient...............");
 				try {
 					downloader.close();
 					logger.info("Downloader closed");
@@ -138,24 +164,56 @@ public class Crawler {
 					executorService.shutdown();
 					logger.info("ThreadPool closed");
 					
+					double timespan = (shutDownTime - startTime) / 1000.0;
+					double throughput = stats.downloadedBytes.get() / 1024 / 1024 * 8 / timespan;
+					
 					logger.info("------------------------------------------------------");
 					logger.info("Total initiatied request: {}", stats.sendRequest.get());
 					logger.info("Downloaded: {}", stats.downloadedPage.get());
 					logger.info("Downloaded bytes: {}", stats.downloadedBytes.get());
+					logger.info("Download throughput: {}", throughput);
 					logger.info("Failed requests: {}", stats.failedRequest.get());
 					logger.info("Timeout requests: {}", stats.timeoutFailure.get());
 					logger.info("Connect refused: {}", stats.connectRefused.get());
 					logger.info("Other exception: {}", stats.otherException.get());
-					logger.info("Time span: {}s", (shutDownTime - startTime) / 1000.0);
+					logger.info("Time span: {}s", timespan);
 					logger.info("------------------------------------------------------");
 					
-					executorService.awaitTermination(1, TimeUnit.MINUTES);
+					//executorService.awaitTermination(1, TimeUnit.MINUTES);
 				} catch (IOException | InterruptedException e) {
 					logger.error(e.getMessage());
 				}
 				
 			}
-		}));
+		};
+		
+		if (arguments.timeInSecond > 0) {
+			logger.info("Register ShutdownHook");
+			Executors.newSingleThreadScheduledExecutor().schedule(shutdownHook, arguments.timeInSecond, TimeUnit.SECONDS);
+		}
+    	
+    	executorService.execute(downloader);
+    	executorService.execute(linkExtracator);
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(shutdownHook));
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		String command = null;
+		
+		while (true) {
+			try {
+				command = reader.readLine().trim();
+				System.out.println("Command is " + command);
+				if (command.equalsIgnoreCase("link")) {
+					logger.info("Link queue length: {}", linkQueue.size());
+				} else if (command.equalsIgnoreCase("page")) {
+					logger.info("Page queue length: {}", pageQueue.size());
+				}
+			} catch (IOException e) {
+				
+			}
+			
+		}
 	}
 	
 	public static String getNetWorkInterface() throws SocketException {
@@ -184,3 +242,4 @@ public class Crawler {
 	
 	
 }
+
