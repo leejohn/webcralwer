@@ -287,4 +287,53 @@ hao123 single 50 connections
 [INFO] Main 16:33:08 Time span: 109.33s
 [INFO] Main 16:33:08 ------------------------------------------------------
 
+hao123 kanguowai both 100 connections
+[INFO] Main 17:08:10 ------------------------------------------------------
+[INFO] Main 17:08:10 Total initiatied request: 17302
+[INFO] Main 17:08:10 Downloaded: 4062 + 33634 = 37696
+[INFO] Main 17:08:10 Downloaded bytes: 32698939
+[INFO] Main 17:08:10 Download throughput: 1.7616388924405804
+[INFO] Main 17:08:10 Failed requests: 37989
+[INFO] Main 17:08:10 Timeout requests: 136 + 73
+[INFO] Main 17:08:10 Connect refused: 4
+[INFO] Main 17:08:10 Other exception: 37912
+[INFO] Main 17:08:10 Time span: 140.778s
+[INFO] Main 17:08:10 ------------------------------------------------------
+
+hao123 single 100 connections
+[INFO] Main 17:26:44 Total initiatied request: 12823
+[INFO] Main 17:26:44 Downloaded: 23975
+[INFO] Main 17:26:44 Downloaded bytes: 97998213
+[INFO] Main 17:26:44 Download throughput: 6.012509899629875
+[INFO] Main 17:26:44 Failed requests: 721391
+[INFO] Main 17:26:44 Timeout requests: 107
+[INFO] Main 17:26:44 Connect refused: 0
+[INFO] Main 17:26:44 Other exception: 721284
+[INFO] Main 17:26:44 Time span: 123.742s
+[INFO] Main 17:26:44 ------------------------------------------------------
+
+hao123 single 100 connections 
+[INFO] Main 20:03:07 Total initiatied request: 26654
+[INFO] Main 20:03:07 Downloaded: 50198
+[INFO] Main 20:03:07 Downloaded bytes: 248888056
+[INFO] Main 20:03:07 Download throughput: 6.169163941627215
+[INFO] Main 20:03:07 Failed requests: 2835802
+[INFO] Main 20:03:07 Timeout requests: 214
+[INFO] Main 20:03:07 Connect refused: 0
+[INFO] Main 20:03:07 Other exception: 2835588
+[INFO] Main 20:03:07 Time span: 307.335s
+[INFO] Main 20:03:07 ------------------------------------------------------
+
+hao123 single 100 connections
+[INFO] Main 20:24:40 Total initiatied request: 58014
+[INFO] Main 20:24:40 Downloaded: 110229
+[INFO] Main 20:24:40 Downloaded bytes: 478309515
+[INFO] Main 20:24:40 Download throughput: average 89MB/s Peak 93MB/s
+[INFO] Main 20:24:40 Failed requests: 1607345
+[INFO] Main 20:24:40 Timeout requests: 370
+[INFO] Main 20:24:40 Connect refused: 2
+[INFO] Main 20:24:40 Other exception: 1606973
+[INFO] Main 20:24:40 Time span: 619.268s
+[INFO] Main 20:24:40 ------------------------------------------------------
+
 
