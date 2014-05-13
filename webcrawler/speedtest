@@ -96,5 +96,195 @@ qq.com 1500 connections 60 seconds
 [INFO] Main 16:43:36 Time span: 61.735s
 [INFO] Main 16:43:36 ------------------------------------------------------
 
+--------------------------------------------------
+double machine
+hao123 both 500 connections 60 seconds
+[INFO] Main 09:23:33 ------------------------------------------------------
+[INFO] Main 09:23:33 Total initiatied request: 5353551
+[INFO] Main 09:23:33 Downloaded: 2215
+[INFO] Main 09:23:33 Downloaded bytes: 158332941
+[INFO] Main 09:23:33 Download throughput: 20.527207102413655
+[INFO] Main 09:23:33 Failed requests: 179
+[INFO] Main 09:23:33 Timeout requests: 116
+[INFO] Main 09:23:33 Connect refused: 13
+[INFO] Main 09:23:33 Other exception: 50
+[INFO] Main 09:23:33 Time span: 58.459s
+[INFO] Main 09:23:33 ------------------------------------------------------
+
+[INFO] Main 09:23:35 ------------------------------------------------------
+[INFO] Main 09:23:35 Total initiatied request: 3540538
+[INFO] Main 09:23:35 Downloaded: 3816
+[INFO] Main 09:23:35 Downloaded bytes: 256476947
+[INFO] Main 09:23:35 Download throughput: 29.836601806704063
+[INFO] Main 09:23:35 Failed requests: 140
+[INFO] Main 09:23:35 Timeout requests: 104
+[INFO] Main 09:23:35 Connect refused: 22
+[INFO] Main 09:23:35 Other exception: 14
+[INFO] Main 09:23:35 Time span: 65.423s
+[INFO] Main 09:23:35 ------------------------------------------------------
+
+qkankan hao123 both 500 connections 60 seconds
+[INFO] Main 10:13:32 ------------------------------------------------------
+[INFO] Main 10:13:32 Total initiatied request: 3995230
+[INFO] Main 10:13:32 Downloaded: 2697
+[INFO] Main 10:13:32 Download throughput: 31.79896585990265
+[INFO] Main 10:13:32 Failed requests: 130
+[INFO] Main 10:13:32 Timeout requests: 79
+[INFO] Main 10:13:32 Connect refused: 20
+[INFO] Main 10:13:32 Other exception: 31
+[INFO] Main 10:13:32 Time span: 59.373s
+[INFO] Main 10:13:32 ------------------------------------------------------
+
+[INFO] Main 10:13:34 ------------------------------------------------------
+[INFO] Main 10:13:34 Total initiatied request: 2869943
+[INFO] Main 10:13:34 Downloaded: 2716
+[INFO] Main 10:13:34 Downloaded bytes: 153662012
+[INFO] Main 10:13:34 Download throughput: 19.784203126852653
+[INFO] Main 10:13:34 Failed requests: 245
+[INFO] Main 10:13:34 Timeout requests: 60
+[INFO] Main 10:13:34 Connect refused: 78
+[INFO] Main 10:13:34 Other exception: 107
+[INFO] Main 10:13:34 Time span: 59.037s
+[INFO] Main 10:13:34 ------------------------------------------------------
+
+kanguowai.com single 500 connections 30 seconds
+[INFO] Main 10:19:22 ------------------------------------------------------
+[INFO] Main 10:19:22 Total initiatied request: 1461520
+[INFO] Main 10:19:22 Downloaded: 1385
+[INFO] Main 10:19:22 Downloaded bytes: 99020629
+[INFO] Main 10:19:22 Download throughput: 23.71865636334963
+[INFO] Main 10:19:22 Failed requests: 427
+[INFO] Main 10:19:22 Timeout requests: 328
+[INFO] Main 10:19:22 Connect refused: 87
+[INFO] Main 10:19:22 Other exception: 12
+[INFO] Main 10:19:22 Time span: 31.705s
+[INFO] Main 10:19:22 ------------------------------------------------------
+
+kanguowai.com single 500 connections 60 seconds
+[INFO] Main 10:22:10 ------------------------------------------------------
+[INFO] Main 10:22:10 Total initiatied request: 7942371
+[INFO] Main 10:22:10 Downloaded: 1889
+[INFO] Main 10:22:10 Downloaded bytes: 173418529
+[INFO] Main 10:22:10 Download throughput: 19.895698308865644
+[INFO] Main 10:22:10 Failed requests: 536
+[INFO] Main 10:22:10 Timeout requests: 382
+[INFO] Main 10:22:10 Connect refused: 137
+[INFO] Main 10:22:10 Other exception: 17
+[INFO] Main 10:22:10 Time span: 66.346s
+[INFO] Main 10:22:10 ------------------------------------------------------
+
+[INFO] Main 15:21:36 Total initiatied request: 9365
+[INFO] Main 15:21:36 Downloaded: 2387
+[INFO] Main 15:21:36 Downloaded bytes: 9787516
+[INFO] Main 15:21:36 Download throughput: 1.5502206911400582
+[INFO] Main 15:21:36 Failed requests: 7745
+[INFO] Main 15:21:36 Timeout requests: 1949
+[INFO] Main 15:21:36 Connect refused: 54
+[INFO] Main 15:21:36 Other exception: 5742
+[INFO] Main 15:21:36 Time span: 46.445s
+[INFO] Main 15:21:36 ------------------------------------------------------
+
+hao123 single 1000connections
+[INFO] Main 15:42:23 ------------------------------------------------------
+[INFO] Main 15:42:23 Total initiatied request: 8223
+[INFO] Main 15:42:23 Downloaded: 7587
+[INFO] Main 15:42:23 Downloaded bytes: 16951287
+[INFO] Main 15:42:23 Download throughput: 0.8849557522123894
+[INFO] Main 15:42:23 Failed requests: 74761
+[INFO] Main 15:42:23 Timeout requests: 1453
+[INFO] Main 15:42:23 Connect refused: 1734
+[INFO] Main 15:42:23 Other exception: 71574
+[INFO] Main 15:42:23 Time span: 144.64s
+[INFO] Main 15:42:23 ------------------------------------------------------
+
+hao123 single 3000 connections 
+[INFO] Main 16:02:13 ------------------------------------------------------
+[INFO] Main 16:02:13 Total initiatied request: 26661
+[INFO] Main 16:02:13 Downloaded: 27775
+[INFO] Main 16:02:13 Downloaded bytes: 37115226
+[INFO] Main 16:02:13 Download throughput: 60MB/s, peak 94MB/s
+[INFO] Main 16:02:13 Failed requests: 9480
+[INFO] Main 16:02:13 Timeout requests: 9221
+[INFO] Main 16:02:13 Connect refused: 0
+[INFO] Main 16:02:13 Other exception: 259
+[INFO] Main 16:02:13 Time span: 129.528s
+[INFO] Main 16:02:13 ------------------------------------------------------
+
+hao123 single 1000 connections
+[INFO] Main 16:07:33 ------------------------------------------------------
+[INFO] Main 16:07:33 Total initiatied request: 19924
+[INFO] Main 16:07:33 Downloaded: 32573
+[INFO] Main 16:07:33 Downloaded bytes: 62208320
+[INFO] Main 16:07:33 Download throughput: 90MB/s
+[INFO] Main 16:07:33 Failed requests: 3735
+[INFO] Main 16:07:33 Timeout requests: 2580
+[INFO] Main 16:07:33 Connect refused: 12
+[INFO] Main 16:07:33 Other exception: 1143
+[INFO] Main 16:07:33 Time span: 123.9s
+[INFO] Main 16:07:33 ------------------------------------------------------
+
+hao123 single 500 connections
+[INFO] Main 16:12:58 ------------------------------------------------------
+[INFO] Main 16:12:58 Total initiatied request: 25277
+[INFO] Main 16:12:58 Downloaded: 46173
+[INFO] Main 16:12:58 Downloaded bytes: 37146962
+[INFO] Main 16:12:58 Download throughput: 90+MB
+[INFO] Main 16:12:58 Failed requests: 1557
+[INFO] Main 16:12:58 Timeout requests: 1071
+[INFO] Main 16:12:58 Connect refused: 33
+[INFO] Main 16:12:58 Other exception: 453
+[INFO] Main 16:12:58 Time span: 158.069s
+[INFO] Main 16:12:58 ------------------------------------------------------
+
+hao123 single 300 connections
+[INFO] Main 16:18:37 ------------------------------------------------------
+[INFO] Main 16:18:37 Total initiatied request: 13667
+[INFO] Main 16:18:37 Downloaded: 25005
+[INFO] Main 16:18:37 Downloaded bytes: 52771566
+[INFO] Main 16:18:37 Download throughput: 90+MB/s
+[INFO] Main 16:18:37 Failed requests: 1385
+[INFO] Main 16:18:37 Timeout requests: 334
+[INFO] Main 16:18:37 Connect refused: 0
+[INFO] Main 16:18:37 Other exception: 1051
+[INFO] Main 16:18:37 Time span: 108.519s
+[INFO] Main 16:18:37 ------------------------------------------------------
+
+hao123 single 200 connections
+[INFO] Main 16:23:39 ------------------------------------------------------
+[INFO] Main 16:23:39 Total initiatied request: 18067
+[INFO] Main 16:23:39 Downloaded: 34062
+[INFO] Main 16:23:39 Downloaded bytes: 37596826
+[INFO] Main 16:23:39 Download throughput: 86MB/S
+[INFO] Main 16:23:39 Failed requests: 9971
+[INFO] Main 16:23:39 Timeout requests: 249
+[INFO] Main 16:23:39 Connect refused: 2
+[INFO] Main 16:23:39 Other exception: 9720
+[INFO] Main 16:23:39 Time span: 160.034s
+[INFO] Main 16:23:39 ------------------------------------------------------
+
+hao123 single 100 connections
+[INFO] Main 16:28:59 Total initiatied request: 16537
+[INFO] Main 16:28:59 Downloaded: 30965
+[INFO] Main 16:28:59 Downloaded bytes: 160887584
+[INFO] Main 16:28:59 Download throughput: 70-80MB/s
+[INFO] Main 16:28:59 Failed requests: 855141
+[INFO] Main 16:28:59 Timeout requests: 87
+[INFO] Main 16:28:59 Connect refused: 5
+[INFO] Main 16:28:59 Other exception: 855049
+[INFO] Main 16:28:59 Time span: 152.491s
+[INFO] Main 16:28:59 ------------------------------------------------------
+
+hao123 single 50 connections
+[INFO] Main 16:33:08 ------------------------------------------------------
+[INFO] Main 16:33:08 Total initiatied request: 11133
+[INFO] Main 16:33:08 Downloaded: 21732
+[INFO] Main 16:33:08 Downloaded bytes: 31105076
+[INFO] Main 16:33:08 Download throughput: 2.1220159151193636
+[INFO] Main 16:33:08 Failed requests: 83352
+[INFO] Main 16:33:08 Timeout requests: 30
+[INFO] Main 16:33:08 Connect refused: 0
+[INFO] Main 16:33:08 Other exception: 83322
+[INFO] Main 16:33:08 Time span: 109.33s
+[INFO] Main 16:33:08 ------------------------------------------------------
 
 

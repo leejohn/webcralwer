@@ -39,6 +39,7 @@ import com.google.common.hash.PrimitiveSink;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClientConfig;
 import com.ning.http.client.AsyncHttpClientConfig.Builder;
+import com.ning.http.client.extra.ThrottleRequestFilter;
 import com.ning.http.client.Response;
 
 public class Crawler {
@@ -134,12 +135,14 @@ public class Crawler {
     	UrlSenders urlSenders = new UrlSenders(executorService, hashRing, linkQueue, "self", ipAddress , String.valueOf(registryPort), "crawler");
     	
         Builder builder = new AsyncHttpClientConfig.Builder();
-        builder.setMaximumNumberOfRedirects(20).setFollowRedirects(true);
+        builder.setMaximumNumberOfRedirects(3).setFollowRedirects(true);
         builder.setMaximumConnectionsTotal(arguments.connections);
         builder.setRequestTimeoutInMs(arguments.timeoutInSeconds * 1000);
         builder.setMaxConnectionLifeTimeInMs(20000);
         builder.setUserAgent("Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)");
-        builder.setMaximumConnectionsPerHost(200);
+        ThrottleRequestFilter trFilter = new ThrottleRequestFilter(arguments.connections);
+        builder.addRequestFilter(trFilter);
+        //builder.setMaximumConnectionsPerHost(200);
         builder.setMaxRequestRetry(3);
     	final AsyncHttpClient asyncHttpClient = new AsyncHttpClient(builder.build());
     	final Downloader downloader = new Downloader(bloomFilter, asyncHttpClient, linkQueue, pageQueue, stats);

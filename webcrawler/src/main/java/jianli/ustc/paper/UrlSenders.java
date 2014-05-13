@@ -179,7 +179,7 @@ public class UrlSenders {
 			
 			String node = hashRing.get(key);
 
-			if (node.equalsIgnoreCase(this.self) || node.equalsIgnoreCase(selfHostPort)) {
+			if (node == null || node.equalsIgnoreCase(this.self) || node.equalsIgnoreCase(selfHostPort)) {
 				this.linkQueue.addAll(urls);
 			} else {
 				executorService.submit(new SendTask(key, name, entry.getValue()));

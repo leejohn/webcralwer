@@ -42,14 +42,14 @@ class MyAsyncCompleteHandler extends AsyncCompletionHandler<Response> {
 	public void onThrowable(Throwable t) {
 		logger.error(t.getMessage());
 		this.stats.failedRequest.incrementAndGet();
-//		if (!this.bloomFilter.mightContain(this.uri)) {
-//			try {
-//				this.linkQueue.put(this.uri);
-//				logger.error("Reput {}", this.uri);
-//			} catch (InterruptedException e) {
-//
-//			}
-//		}
+		if (!this.bloomFilter.mightContain(this.uri)) {
+			try {
+				this.linkQueue.put(this.uri);
+				logger.error("Reput {}", this.uri);
+			} catch (InterruptedException e) {
+
+			}
+		}
 		
 		 if (t instanceof TimeoutException) {
 			 this.stats.timeoutFailure.incrementAndGet();
@@ -101,15 +101,17 @@ public class Downloader implements Runnable, Closeable {
 	public void run() {
 
 		while (this.running) {
-			MyAsyncCompleteHandler handler = new MyAsyncCompleteHandler(
-					this.bloomFilter, this.linkQueue, this.pageQueue, this.stats);
+			
 			try {
 				String link = linkQueue.take();
+				
+				MyAsyncCompleteHandler handler = new MyAsyncCompleteHandler(
+						this.bloomFilter, this.linkQueue, this.pageQueue, this.stats);
 				handler.setUri(link);
 				
 //				logger.info("Send {}", link);
-				this.stats.sendRequest.incrementAndGet();
 				this.client.prepareGet(link).execute(handler);
+				this.stats.sendRequest.incrementAndGet();
 
 			} catch (Exception e) {
 				//logger.error(e.getMessage());
